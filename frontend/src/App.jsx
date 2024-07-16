@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Home from "./pages/Home"
+import ArrayDetail from "./pages/ArrayDetail"
+import MergeSort from "./pages/MergeSort"
+import QuickSort from "./pages/Quicksort"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
 
@@ -25,6 +28,30 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/array/:id"
+          element={
+            <ProtectedRoute>
+              <ArrayDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/array/:id/mergesort"
+          element={
+            <ProtectedRoute>
+              <MergeSort />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/array/:id/quicksort"
+          element={
+            <ProtectedRoute>
+              <QuickSort />
             </ProtectedRoute>
           }
         />

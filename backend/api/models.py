@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 
 
 class Note(models.Model):
@@ -10,3 +11,11 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Array(models.Model):
+    name = models.CharField(max_length=100)
+    values = ArrayField(models.IntegerField())
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="arrays")
+
+    def __str__(self):
+        return self.name

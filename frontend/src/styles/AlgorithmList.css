@@ -1,0 +1,22 @@
+
+.algorithm-list-container {
+    padding: 10px;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .algorithm-container {
+    padding: 6px;
+    margin: 12px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  .algorithm-name {
+    color: #333;
+  }
+  
+  
+
+  
