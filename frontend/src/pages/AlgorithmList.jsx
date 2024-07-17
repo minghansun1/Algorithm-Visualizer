@@ -1,13 +1,12 @@
 import PublicNavBar from "../components/PublicNavBar"
 
-function QuickSort(){
-    
-
+function AlgorithmList(){
     return <div>
         <PublicNavBar></PublicNavBar>
-        <h1>QuickSort</h1>
+        <div>
+            <h1>Algorithms</h1>
+        </div>
     </div>
-    
 }
 
-export default QuickSort
+export default AlgorithmList

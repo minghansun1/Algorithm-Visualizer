@@ -7,4 +7,5 @@ urlpatterns = [
     path("arrays/", views.ArrayListCreate.as_view(), name = "array-list"),
     path("arrays/delete/<int:pk>/", views.ArrayDelete.as_view(), name = "delete-array"),
     path("arrays/update/<int:pk>/", views.ArrayUpdate.as_view(), name = "update-array"),
+    path("arrays/mergesort/<int:pk>/", views.MergeSort.as_view(), name = "mergesort-array"),
 ]

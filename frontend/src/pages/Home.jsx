@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import api from "../api";
 {/*import Note from "../components/Note"*/}
 import Array from "../components/Array"
+import PublicNavBar from "../components/PublicNavBar"
 import "../styles/Home.css"
 
 function Home() {
@@ -104,6 +105,7 @@ function Home() {
 
     return (
         <div>
+            <PublicNavBar></PublicNavBar>
             <div>
                 {/*
                 <h2>Notes</h2>

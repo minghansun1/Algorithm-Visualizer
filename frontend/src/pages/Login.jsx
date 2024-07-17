@@ -1,7 +1,13 @@
 import Form from "../components/Form"
+import PublicNavBar from "../components/PublicNavBar"
 
 function Login(){
-    return <Form route="/api/token/" method="login"/>
+    return <div>
+        <PublicNavBar></PublicNavBar>
+        <div>
+            <Form route="/api/token/" method="login"/>
+        </div>
+    </div>
 }
 
 export default Login

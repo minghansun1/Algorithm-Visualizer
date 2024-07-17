@@ -1,0 +1,46 @@
+nav {
+    background-color: #031e62;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 6px 0; /* Top and bottom padding for navbar content */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav li {
+    display: inline;
+}
+
+nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    background-color: #575757;
+}
+
+/* Ensure the content goes underneath the navbar */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body::before {
+    content: "";
+    display: block;
+    height: 50px; /* Adjust this value based on the height of your navbar */
+}

@@ -26,3 +26,18 @@ class ArraySerializer(serializers.ModelSerializer):
     class Meta:
         model = Array
         fields = ["id", "name", "values"]
+
+
+class MergeSortOutputSerializer(serializers.Serializer):
+    steps = serializers.ListField(
+        child=serializers.ListField(
+            child=serializers.IntegerField()
+        ),
+        read_only=True
+    )
+    split_indices = serializers.ListField(
+        child=serializers.ListField(
+            child=serializers.IntegerField()
+        ),
+        read_only=True
+    )

@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
 import "../styles/Array.css"; // Ensure this path is correct
+import PublicNavBar from "../components/PublicNavBar"
 import "../styles/AlgorithmList.css"
 
 function ArrayDetail() {
@@ -11,6 +12,7 @@ function ArrayDetail() {
 
     return (
         <div>
+            <PublicNavBar></PublicNavBar>
             <h2>Array Detail</h2>
             <div className="array-container">
                 <p className="array-title">{array.name}</p>
