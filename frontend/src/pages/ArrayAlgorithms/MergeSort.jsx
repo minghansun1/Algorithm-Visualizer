@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import api from "../api";
-import ArraySlider from "../components/ArraySlider"; // Adjust the import path as necessary
-import PublicNavBar from "../components/PublicNavBar"
-import "../styles/MergeSortSteps.css";
+import api from "../../api";
+import ArraySlider from "../../components/ArraySlider";
+import PublicNavBar from "../../components/PublicNavBar"
+import "../../styles/MergeSortSteps.css";
 
 function MergeSort() {
     const location = useLocation();
@@ -53,7 +53,7 @@ function MergeSort() {
     return (
         <div>
             <PublicNavBar></PublicNavBar>
-            <h2>Merge Sort Steps</h2>
+            <h2>Merge Sort</h2>
             <ArraySlider 
                 max={subArrays.length - 1} 
                 currentRow={currentRow} 

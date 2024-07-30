@@ -1,15 +1,18 @@
 import react from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import ProtectedRoute from "./components/ProtectedRoute"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Home from "./pages/Home"
 import About from "./pages/About"
 import AlgorithmList from "./pages/AlgorithmList"
-import ArrayDetail from "./pages/ArrayDetail"
-import MergeSort from "./pages/MergeSort"
-import QuickSort from "./pages/QuickSort"
 import NotFound from "./pages/NotFound"
-import ProtectedRoute from "./components/ProtectedRoute"
+import ArrayDetail from "./pages/ArrayDetail"
+import MergeSort from "./pages/ArrayAlgorithms/MergeSort"
+import QuickSort from "./pages/ArrayAlgorithms/QuickSort"
+import BinarySearch from "./pages/ArrayAlgorithms/BinarySearch"
+import CountingInversions from "./pages/ArrayAlgorithms/CountingInversions"
+import QuickSelect from "./pages/ArrayAlgorithms/QuickSelect"
 
 function Logout() {
   localStorage.clear()
@@ -56,6 +59,30 @@ function App() {
               <QuickSort />
             </ProtectedRoute>
           }
+        />
+        <Route
+        path="/array/:id/binarysearch"
+        element={
+          <ProtectedRoute>
+            <BinarySearch />
+          </ProtectedRoute>
+        }
+        />
+        <Route
+        path="/array/:id/countinginversions"
+        element={
+          <ProtectedRoute>
+            <CountingInversions />
+          </ProtectedRoute>
+        }
+        />
+        <Route
+        path="/array/:id/quickselect"
+        element={
+          <ProtectedRoute>
+            <QuickSelect />
+          </ProtectedRoute>
+        }
         />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />

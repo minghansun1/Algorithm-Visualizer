@@ -4,6 +4,7 @@ import "../styles/ArraySlider.css";
 const ArraySlider = ({ max, currentRow, setCurrentRow }) => {
     return (
         <div>
+            <p>Current Step: {currentRow}</p>
             <input
                 type="range"
                 min="0"

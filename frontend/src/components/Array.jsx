@@ -8,6 +8,7 @@ function Array({array, onDelete}) {
             <p className="array-name">
                 <Link to={`/array/${array.id}/`} state={{ array }}>{array.name}</Link>
             </p>
+            <p >ID: {array.id}</p>
             <p className="array-values">{array.values.join(", ")}</p>
             <button className="delete-button" onClick={() => onDelete(array.id)}>
                 Delete

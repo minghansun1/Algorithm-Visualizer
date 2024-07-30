@@ -1,6 +1,7 @@
 import copy
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -53,6 +54,15 @@ class ArrayListCreate(generics.ListCreateAPIView):
             print(serializer.errors)
 
 
+class ArrayGet(generics.RetrieveAPIView):
+    serializer_class = ArraySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        id = self.kwargs['pk']
+        return get_object_or_404(Array, pk=id, author=user)
+    
 
 class ArrayDelete(generics.DestroyAPIView):
     serializer_class = ArraySerializer

@@ -96,8 +96,7 @@ function Home() {
         api
             .post("/api/arrays/", {name: arrayName, values})
             .then((res) => {
-                if (res.status === 201) alert("Array created!");
-                else alert("Failed to make array.");
+                if (res.status !== 201) alert("Failed to make array.");
                 getArrays();
             })
             .catch((err) => alert(err));

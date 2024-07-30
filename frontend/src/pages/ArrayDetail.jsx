@@ -31,17 +31,17 @@ function ArrayDetail() {
                 </div>
                 <div className="algorithm-container">
                     <p className="algorithm-name">
-                        Binary Search
+                        <Link to={`/array/${array.id}/binarysearch`} state={{ array }}>BinarySearch</Link>
                     </p>
                 </div>
                 <div className="algorithm-container">
                     <p className="algorithm-name">
-                        Counting Inversions
+                    <Link to={`/array/${array.id}/countinginversions`} state={{ array }}>Counting Inversions</Link>
                     </p>
                 </div>
                 <div className="algorithm-container">
                     <p className="algorithm-name">
-                        Quickselect
+                    <Link to={`/array/${array.id}/quickselect`} state={{ array }}>QuickSelect</Link>
                     </p>
                 </div>
             </div>
