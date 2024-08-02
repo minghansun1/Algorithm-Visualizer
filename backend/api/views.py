@@ -61,7 +61,7 @@ class ArrayGet(generics.RetrieveAPIView):
     def get_queryset(self):
         user = self.request.user
         id = self.kwargs['pk']
-        return get_object_or_404(Array, pk=id, author=user)
+        return Array.objects.filter(author=user, id=id)
     
 
 class ArrayDelete(generics.DestroyAPIView):

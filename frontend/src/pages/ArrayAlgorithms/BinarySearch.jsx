@@ -53,6 +53,7 @@ function BinarySearch(){
     };
 
     const handleSubmit = (e) => {
+        setCurrentStep(0);
         e.preventDefault();
         getBinarySearchArray();
     };
@@ -74,55 +75,74 @@ function BinarySearch(){
     return (
         <div>
             <PublicNavBar />
-            <h1>Binary Search</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Target:
-                    <input type="number" value={target} onChange={handleTargetChange} />
-                </label>
-                <button type="submit">Search</button>
-            </form>
-            {result !== null && result !== -1 && lefts.length>0 ? (
-                <div>
-                    <ArraySlider
-                        max={lefts.length-1}
-                        currentRow={currentStep}
-                        setCurrentRow={setCurrentStep}
-                    />
-                    <p>Target found at index: {result}</p>
-                    <table>
-                        <tbody>
-                            <tr>
-                            <th>Array</th>
-                            {array.values.map((cell, cellIndex) => {
-                                    let cellColor = 'black';
-                                    if (lefts[currentStep] > cellIndex || rights[currentStep] < cellIndex) {
-                                        cellColor = 'red';
-                                    }
-                                    if (lefts[currentStep]==rights[currentStep] && cellIndex == result){
-                                        cellColor = 'green';
-                                    }
-                                    return (
-                                        <td key={cellIndex} style={{ color: cellColor }}>
-                                            {cell}
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                            <tr>
-                                <th>Midpoint</th>
-                                {array.values.map((_, cellIndex) => (
-                                    <td key={cellIndex} style={{ textAlign: 'center' }}>
-                                        {cellIndex === middles[currentStep] ? '↑' : ''}
-                                    </td>
-                                ))}
-                            </tr>
-                        </tbody>
-                    </table>
+            <div className="container">
+                <div className="left-section">
+                    <h1>Binary Search</h1>
+                    <p>
+                        Binary Search Algorithm is a searching algorithm used in a sorted array by repeatedly dividing the search interval in half. The idea of binary search is to use the information that the array is sorted and reduce the time complexity to O(log N). 
+                    </p>
                 </div>
-            ) : (
-                <p>Target not found in the array</p>
-            )}
+                <div className="right-section">
+                    <form onSubmit={handleSubmit}>
+                        <label>
+                            Target:
+                            <input type="number" value={target} onChange={handleTargetChange} />
+                        </label>
+                        <button type="submit">Search</button>
+                    </form>
+                    <div className="slider-section">
+                        <ArraySlider
+                            max={lefts.length-1}
+                            currentRow={currentStep}
+                            setCurrentRow={setCurrentStep}
+                        />
+                    </div>
+                    <div className="array-section">
+                        {result !== null && result !== -1 && lefts.length>0 ? (
+                            <div>
+                                <p>Target found at index: {result}</p>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                        <th>Array</th>
+                                        {array.values.map((cell, cellIndex) => {
+                                                let cellColor = 'black';
+                                                if (lefts[currentStep] > cellIndex || rights[currentStep] < cellIndex) {
+                                                    cellColor = 'red';
+                                                }
+                                                if (lefts[currentStep]==rights[currentStep] && cellIndex == result){
+                                                    cellColor = 'green';
+                                                }
+                                                return (
+                                                    <td key={cellIndex} style={{ color: cellColor }}>
+                                                        {cell}
+                                                    </td>
+                                                );
+                                            })}
+                                        </tr>
+                                        <tr>
+                                            <th>Midpoint</th>
+                                            {array.values.map((_, cellIndex) => (
+                                                <td key={cellIndex} style={{ textAlign: 'center' }}>
+                                                    {cellIndex === middles[currentStep] ? '↑' : ''}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <p>Target not found in the array</p>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <div>
+            
+            
+            
+            
+        </div>
         </div>
     );
 }

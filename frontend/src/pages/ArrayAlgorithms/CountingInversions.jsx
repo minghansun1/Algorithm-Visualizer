@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PublicNavBar from "../../components/PublicNavBar"
 import ArraySlider from "../../components/ArraySlider";
-import "../../styles/MergeSortSteps.css";
+import "../../styles/ArrayDivideAndConquerRender.css";
 
 function privateCountingInversions (array) {
     const steps = [];
@@ -162,44 +162,57 @@ function CountingInversions(){
     }, [subArrays]);
 
 
-    return <div>
-        <PublicNavBar></PublicNavBar>
-        <h1>Counting Inversions</h1>
-        <ArraySlider
-            max={steps.length-1}
-            currentRow={currentStep}
-            setCurrentRow={setCurrentStep}
-        />
-        <div className="row">
-            {subArrays[currentStep]?.map((subArray, subIndex) => (
-                <div key={subIndex} className="subarray-container">
-                    <table className="subarray-table">
-                        <tbody>
+    return (
+        <div>
+            <PublicNavBar />
+            <div className="container">
+                <div className="left-section">
+                    <h1>Counting Inversions</h1>
+                    <p>
+                        Use Merge sort with modification that every time an unsorted pair is found increment count by one and return count at the end.
+                    </p>
+                </div>
+                <div className="right-section">
+                    <div className="slider-section">
+                        <ArraySlider
+                        max={steps.length-1}
+                        currentRow={currentStep}
+                        setCurrentRow={setCurrentStep}
+                        />
+                    </div>
+                        <div className="array-section">
+                            <div className="row">
+                            {subArrays[currentStep]?.map((subArray, subIndex) => (
+                                <div key={subIndex} className="subarray-container">
+                                    <table className="subarray-table">
+                                        <tbody>
+                                            <tr>
+                                                {subArray.map((cell, cellIndex) => (
+                                                    <td key={cellIndex}>{cell}</td>
+                                                ))}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div className="split-count">
+                                        ({splitCount[currentStep]?.[subIndex+1]})
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <table>
                             <tr>
-                                {subArray.map((cell, cellIndex) => (
-                                    <td key={cellIndex}>{cell}</td>
+                                {tempArrays[currentStep]?.map((temp, tempIndex) => (
+                                    <td key={tempIndex}>
+                                        {temp}
+                                    </td>
                                 ))}
                             </tr>
-                        </tbody>
-                    </table>
-                    <div className="split-count">
-                        ({splitCount[currentStep]?.[subIndex+1]})
+                        </table>
                     </div>
                 </div>
-            ))}
-        </div>
-        <table>
-            <tr>
-                {tempArrays[currentStep]?.map((temp, tempIndex) => (
-                    <td key={tempIndex}>
-                        {temp}
-                    </td>
-                ))}
-            </tr>
-        
-        </table>
-        
-    </div>
+            </div>
+         </div>
+    );
 }
 
 export default CountingInversions

@@ -1,58 +1,18 @@
 import { useState, useEffect } from "react";
 import api from "../api";
-{/*import Note from "../components/Note"*/}
 import Array from "../components/Array"
 import PublicNavBar from "../components/PublicNavBar"
 import "../styles/Home.css"
 
 function Home() {
-    {/* const [notes, setNotes] = useState([]);
-    const [content, setContent] = useState("");
-    const [title, setTitle] = useState(""); */}
     const [arrays, setArrays] = useState([]);
     const [arrayContent, setArrayContent] = useState("");
     const [arrayName, setArrayName] = useState("");
 
     useEffect(() => {
-        {/*getNotes();*/}
         getArrays();
     }, []);
 
-    {/*
-    const getNotes = () => {
-        api
-            .get("/api/notes/")
-            .then((res) => res.data)
-            .then((data) => {
-                setNotes(data);
-                console.log(data);
-            })
-            .catch((err) => alert(err));
-    };
-
-    const deleteNote = (id) => {
-        api
-            .delete(`/api/notes/delete/${id}/`)
-            .then((res) => {
-                if (res.status === 204) alert("Note deleted!");
-                else alert("Failed to delete note.");
-                getNotes();
-            })
-            .catch((error) => alert(error));
-    };
-
-    const createNote = (e) => {
-        e.preventDefault();
-        api
-            .post("/api/notes/", { content, title })
-            .then((res) => {
-                if (res.status === 201) alert("Note created!");
-                else alert("Failed to make note.");
-                getNotes();
-            })
-            .catch((err) => alert(err));
-    };
-    */}
     const getArrays = () => {
         api
             .get("/api/arrays/")
@@ -104,71 +64,46 @@ function Home() {
 
     return (
         <div>
-            <PublicNavBar></PublicNavBar>
-            <div>
-                {/*
-                <h2>Notes</h2>
-                {notes.map((note) => (
-                    <Note note={note} onDelete={deleteNote} key={note.id} />
-                ))}
-                */}
-                <h2>Arrays</h2>
-                {arrays.map((array) => (
-                    <Array array={array} onDelete={deleteArray} key={array.id} />
-                ))}
-            </div>
-            {/*
-            <h2>Create a Note</h2>
-            <form onSubmit={createNote}>
-                <label htmlFor="title">Title:</label>
-                <br />
-                <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    required
-                    onChange={(e) => setTitle(e.target.value)}
-                    value={title}
-                />
-                <label htmlFor="content">Content:</label>
-                <br />
-                <textarea
-                    id="content"
-                    name="content"
-                    required
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                ></textarea>
-                <br />
-                <input type="submit" value="Submit"></input>
-            </form>
-            */}
-            <h2>Create an Array</h2>
-            <form onSubmit={createArray}>
+          <PublicNavBar />
+          <div className="container">
+            <div className="left">
+              <h2>Create an Array</h2>
+              <form onSubmit={createArray}>
                 <label htmlFor="arrayName">Name:</label>
                 <br />
                 <input
-                    type="text"
-                    id="arrayName"
-                    name="arrayName"
-                    required
-                    onChange={(e) => setArrayName(e.target.value)}
-                    value={arrayName}
+                  type="text"
+                  id="arrayName"
+                  name="arrayName"
+                  required
+                  onChange={(e) => setArrayName(e.target.value)}
+                  value={arrayName}
                 />
+                <br />
                 <label htmlFor="arrayContent">Values (comma separated integers):</label>
                 <br />
                 <textarea
-                    id="arrayContent"
-                    name="arrayContent"
-                    required
-                    value={arrayContent}
-                    onChange={(e) => setArrayContent(e.target.value)}
+                  id="arrayContent"
+                  name="arrayContent"
+                  required
+                  value={arrayContent}
+                  onChange={(e) => setArrayContent(e.target.value)}
                 ></textarea>
                 <br />
-                <input type="submit" value="Submit"></input>
-            </form>
+                <input type="submit" value="Submit" />
+              </form>
+            </div>
+            <div className="right">
+                <h2>Arrays</h2>
+                <div style={{ maxHeight: '700px', overflowY: 'scroll' }}>
+                    {arrays.map((array) => (
+                        <Array array={array} onDelete={deleteArray} key={array.id} />
+                    ))}
+                </div>
+            </div>
+          </div>
         </div>
-    );
+      );
 }
 
 export default Home;

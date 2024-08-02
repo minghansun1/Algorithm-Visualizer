@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+.left-section {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin-right: 20px;
+  }
+  
+  .slider-section {
+    margin-bottom: 20px;
+  }
+  
+  .array-section {
+    overflow-y: auto;
+  }
+  
+  .right-section {
+    width: 70%;
+    padding-left: 20px;
+    border-left: 1px solid #ccc;
+  }

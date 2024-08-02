@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import api from "../../api";
 import PublicNavBar from "../../components/PublicNavBar"
 import ArraySlider from "../../components/ArraySlider";
+import "../../styles/ArrayVisualizer.css";
 
 function privateQuickSort(array) {
     const steps = [];
@@ -73,27 +73,43 @@ function QuickSort(){
     return (
         <div>
             <PublicNavBar />
-            <h1>QuickSort</h1>
-            {steps.length > 0 && (
-                <ArraySlider
-                    max={steps.length - 1}
-                    currentRow={currentStep}
-                    setCurrentRow={setCurrentStep}
-                />
-            )}
-            {steps.length > 0 && (
-                <table>
-                    <tbody>
-                        <tr>
-                            {steps[currentStep].map((cell, cellIndex) => (
-                                <td key={cellIndex} style={{ color: pivots[currentStep][cellIndex] === 1 ? 'red' : 'black' }}>
-                                    {cell}
-                                </td>
-                            ))}
-                        </tr>
-                    </tbody>
-                </table>
-            )}
+            <div className="container">
+                <div className="left-section">
+                    <h1>Quicksort</h1>
+                    <p>
+                        QuickSort is a sorting algorithm based on the Divide and Conquer algorithm that picks an element as a pivot and partitions the given array around the picked pivot by placing the pivot in its correct position in the sorted array.
+                    </p>
+                </div>
+                <div className="right-section">
+                    <div className="slider-section">
+                        {steps.length > 0 && (
+                            <ArraySlider
+                                max={steps.length - 1}
+                                currentRow={currentStep}
+                                setCurrentRow={setCurrentStep}
+                            />
+                        )}
+                    </div>
+                    <div className="array-section">
+                        {steps.length > 0 && (
+                        <table>
+                            <tbody>
+                                <tr>
+                                    {steps[currentStep].map((cell, cellIndex) => (
+                                        <td key={cellIndex} style={{ color: pivots[currentStep][cellIndex] === 1 ? 'red' : 'black' }}>
+                                            {cell}
+                                        </td>
+                                    ))}
+                                </tr>
+                            </tbody>
+                        </table>
+                        )}
+                    </div>
+                </div>
+                
+            </div>
+
+            
         </div>
     );
     

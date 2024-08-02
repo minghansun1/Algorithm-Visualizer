@@ -1,90 +1,54 @@
-/* Container for the whole page */
-div {
+body {
   font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 40px;
 }
 
-/* Styles for the notes section */
-.notes-section {
-  margin-bottom: 2rem;
+.container {
+  display: flex;
+  width: calc(100% - 80px);
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-.notes-section h2 {
-  color: #333;
-  font-size: 24px;
+/* Left section */
+.left {
+  width: 40%; /* Adjusted width to accommodate spacing */
+  padding-right: 20px; /* Adding right padding */
+  box-sizing: border-box;
 }
 
-/* Styles for individual notes - assuming your Note component has some container element */
-.note-container {
-  background-color: #f9f9f9;
-  border-left: 5px solid #007bff;
-  margin: 10px 0;
-  padding: 10px 15px;
-  border-radius: 5px;
-}
-
-.note-title {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-.note-content {
-  margin: 10px 0;
-}
-
-.note-date {
-  color: #888;
-  font-size: 0.9em;
-}
-
-.delete-button {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
+/* Right section */
+.right {
+  width: 60%; /* Adjusted width to accommodate spacing */
+  padding-left: 20px; /* Adding left padding */
+  box-sizing: border-box;
 }
 
 /* Styles for the arrays section */
 .arrays-section {
   margin-bottom: 2rem;
+  margin-top: 20px; /* Adding a top margin */
+  margin-left: 10px; /* Adding a left margin */
+  margin-right: 10px; /* Adding a right margin */
 }
 
 .arrays-section h2 {
   color: #333;
   font-size: 24px;
+  margin-bottom: 15px; /* Example margin for the h2 element */
 }
 
-/* Styles for individual arrays - assuming your Array component has some container element */
+/* Styles for individual arrays */
 .array-container {
   background-color: #f9f9f9;
   border-left: 5px solid #031e62;
   margin: 10px 0;
   padding: 10px 15px;
   border-radius: 5px;
-}
-
-.array-title {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-.array-content {
-  margin: 10px 0;
-}
-
-.array-date {
-  color: #888;
-  font-size: 0.9em;
-}
-
-.delete-button {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
+  margin-left: 5px; /* Example left margin for individual arrays */
+  margin-right: 5px; /* Example right margin for individual arrays */
 }
 
 /* Styles for the form section */
@@ -93,8 +57,8 @@ form {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
-  margin: auto;
+  margin: left;
+  margin-top: 20px
 }
 
 form h2 {

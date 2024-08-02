@@ -1,22 +1,27 @@
+.container {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
 
-.algorithm-list-container {
-    padding: 10px;
-    margin: 20px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .algorithm-container {
-    padding: 6px;
-    margin: 12px 0;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
+.left-section, .right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px; /* Optional spacing between sections */
+}
 
-  .algorithm-name {
-    color: #333;
-  }
-  
-  
+.algorithm-container {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  
+.algorithm-name {
+  color: #333;
+}
+
+h1, h2 {
+  text-align: center;
+}

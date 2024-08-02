@@ -13,6 +13,13 @@ import QuickSort from "./pages/ArrayAlgorithms/QuickSort"
 import BinarySearch from "./pages/ArrayAlgorithms/BinarySearch"
 import CountingInversions from "./pages/ArrayAlgorithms/CountingInversions"
 import QuickSelect from "./pages/ArrayAlgorithms/QuickSelect"
+import MergeSortInfo from "./pages/Info/MergeSortInfo"
+import QuickSortInfo from "./pages/Info/QuickSortInfo"
+import BinarySearchInfo from "./pages/Info/BinarySearchInfo"
+import CountingInversionsInfo from "./pages/Info/CountingInversionsInfo"
+import QuickSelectInfo from "./pages/Info/QuickSelectInfo"
+import DijkstraInfo from "./pages/Info/DjikstraInfo"
+import PrimInfo from "./pages/Info/PrimInfo"
 
 function Logout() {
   localStorage.clear()
@@ -89,6 +96,13 @@ function App() {
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="/about" element={<About />} />
         <Route path="/algorithm-list" element={<AlgorithmList />} />
+        <Route path="/algorithm-list/mergesort" element={<MergeSortInfo />} />
+        <Route path="/algorithm-list/quicksort" element={<QuickSortInfo />} />
+        <Route path="/algorithm-list/binarysearch" element={<BinarySearchInfo />} />
+        <Route path="/algorithm-list/countinginversions" element={<CountingInversionsInfo />} />
+        <Route path="/algorithm-list/quickselect" element={<QuickSelectInfo />} />
+        <Route path="/algorithm-list/dijkstra" element={<DijkstraInfo />} />
+        <Route path="/algorithm-list/prim" element={<PrimInfo />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
