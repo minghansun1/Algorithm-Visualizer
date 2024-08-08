@@ -5,9 +5,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import UserSerializer, NoteSerializer, ArraySerializer, MergeSortOutputSerializer
+from .serializers import UserSerializer, NoteSerializer, ArraySerializer, GraphSerializer, VertexSerializer, EdgeSerializer, MergeSortOutputSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Note, Array
+from .models import Note, Array, Graph, Vertex, Edge
 
 class NoteListCreate(generics.ListCreateAPIView):
     serializer_class = NoteSerializer
@@ -81,7 +81,179 @@ class ArrayUpdate(generics.UpdateAPIView):
         user = self.request.user
         return Array.objects.filter(author=user)
     
+
+class GraphListCreate(generics.ListCreateAPIView):
+    serializer_class = GraphSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Graph.objects.filter(author=user)
     
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            serializer.save(author = self.request.user)
+        else:
+            print(serializer.errors)
+
+
+class GraphGet(generics.RetrieveAPIView):
+    serializer_class = GraphSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        id = self.kwargs['pk']
+        return Graph.objects.filter(author=user, id=id)
+    
+
+class GraphDelete(generics.DestroyAPIView):
+    serializer_class = GraphSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Graph.objects.filter(author=user)
+    
+
+class GraphUpdate(generics.UpdateAPIView):
+    serializer_class = GraphSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Graph.objects.filter(author=user)
+    
+
+class VertexListCreate(generics.ListCreateAPIView):
+    serializer_class = VertexSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        return graph.vertices.all()
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        serializer.save(graph=graph)
+
+
+class VertexGet(generics.RetrieveAPIView):
+    serializer_class = VertexSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        return graph.vertices.all()
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        vertex_id = self.kwargs['vertex_id']
+        return get_object_or_404(queryset, id=vertex_id)
+
+
+class VertexDelete(generics.DestroyAPIView):
+    serializer_class = VertexSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        return graph.vertices.all()
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        vertex_id = self.kwargs['vertex_id']
+        return get_object_or_404(queryset, id=vertex_id)
+    
+
+class VertexUpdate(generics.UpdateAPIView):
+    serializer_class = VertexSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = Graph.objects.get(author=user, id=graph_id)
+        return graph.vertices.all()
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        vertex_id = self.kwargs['vertex_id']
+        return get_object_or_404(queryset, id=vertex_id)
+    
+
+class EdgeListCreate(generics.ListCreateAPIView):
+    serializer_class = EdgeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        return graph.edges.all()
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        serializer.save(graph=graph)
+
+class EdgeGet(generics.RetrieveAPIView):
+    serializer_class = EdgeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        return graph.edges.all()
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        edge_id = self.kwargs['edge_id']
+        return get_object_or_404(queryset, id=edge_id)
+
+
+class EdgeDelete(generics.DestroyAPIView):
+    serializer_class = EdgeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        return graph.edges.all()
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        edge_id = self.kwargs['edge_id']
+        return get_object_or_404(queryset, id=edge_id)
+    
+
+class EdgeUpdate(generics.UpdateAPIView):
+    serializer_class = EdgeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        graph_id = self.kwargs['pk']
+        graph = get_object_or_404(Graph, author=user, id=graph_id)
+        return graph.edges.all()
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+        edge_id = self.kwargs['edge_id']
+        return get_object_or_404(queryset, id=edge_id)
+
+
 class MergeSort(APIView):
     permission_classes = [IsAuthenticated]
     

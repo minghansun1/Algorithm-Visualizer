@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
 import api from "../api";
-import "../styles/Array.css";
 import PublicNavBar from "../components/PublicNavBar"
+import "../styles/Array.css";
 import "../styles/ArrayDetail.css"
 
 function ArrayDetail() {
@@ -55,50 +55,52 @@ function ArrayDetail() {
 
     return (
         <div>
-            <PublicNavBar></PublicNavBar>
+            <PublicNavBar />
             <h1>Array Detail</h1>
-            <div >
-                <form className="array-container" onSubmit={updateArray}>
-                    <h2 className="array-title">{array.name}</h2>
-                    <p className="array-content">{arrayContent}</p>
-                    <input
+            <div className="container">
+                <div className="left-section">
+                    <form className="array-container" onSubmit={updateArray}>
+                        <h2 className="array-name">{array.name}</h2>
+                        <p>{arrayContent}</p>
+                        <input
                         type="text"
                         value={arrayContent}
                         onChange={(e) => setArrayContent(e.target.value)}
                         placeholder="New Content"
-                    />
-                    <button className="form-button" type="submit">Update Array</button>
-                </form>
-            </div>
-            <div className="algorithm-list-container">
-                <div className="algorithm-container">
-                    <p className="algorithm-name">
-                        <Link to={`/array/${array.id}/mergesort`} state={{ array }}>Merge Sort</Link>
-                    </p>
+                        />
+                        <button className="form-button" type="submit">Update Array</button>
+                    </form>
                 </div>
-                <div className="algorithm-container">
+                <div className="right-section">
+                    <div className="algorithm-container">
                     <p className="algorithm-name">
-                    <Link to={`/array/${array.id}/quicksort`} state={{ array }}>Quick Sort</Link>
+                        <Link to={`/arrays/${array.id}/mergesort`} state={{ array }}>Merge Sort</Link>
                     </p>
-                </div>
-                <div className="algorithm-container">
+                    </div>
+                    <div className="algorithm-container">
                     <p className="algorithm-name">
-                        <Link to={`/array/${array.id}/binarysearch`} state={{ array }}>BinarySearch</Link>
+                        <Link to={`/arrays/${array.id}/quicksort`} state={{ array }}>Quick Sort</Link>
                     </p>
-                </div>
-                <div className="algorithm-container">
+                    </div>
+                    <div className="algorithm-container">
                     <p className="algorithm-name">
-                    <Link to={`/array/${array.id}/countinginversions`} state={{ array }}>Counting Inversions</Link>
+                        <Link to={`/arrays/${array.id}/binarysearch`} state={{ array }}>BinarySearch</Link>
                     </p>
-                </div>
-                <div className="algorithm-container">
+                    </div>
+                    <div className="algorithm-container">
                     <p className="algorithm-name">
-                    <Link to={`/array/${array.id}/quickselect`} state={{ array }}>QuickSelect</Link>
+                        <Link to={`/arrays/${array.id}/countinginversions`} state={{ array }}>Counting Inversions</Link>
                     </p>
+                    </div>
+                    <div className="algorithm-container">
+                    <p className="algorithm-name">
+                        <Link to={`/arrays/${array.id}/quickselect`} state={{ array }}>QuickSelect</Link>
+                    </p>
+                    </div>
                 </div>
             </div>
         </div>
-    );
-};
+      );
+    };
 
 export default ArrayDetail;

@@ -1,17 +1,13 @@
 
-.array-container {
+.graph-container {
     padding: 10px;
     margin: 20px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
   }
   
-  .array-name {
+  .graph-name {
     color: #333;
-  }
-  
-  .array-values {
-    color: #666;
   }
   
   .delete-button {

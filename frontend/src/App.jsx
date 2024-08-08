@@ -7,7 +7,10 @@ import Home from "./pages/Home"
 import About from "./pages/About"
 import AlgorithmList from "./pages/AlgorithmList"
 import NotFound from "./pages/NotFound"
+import ArrayAlgorithmsHome from "./pages/ArrayAlgorithmsHome"
+import GraphAlgorithmsHome from "./pages/GraphAlgorithmsHome"
 import ArrayDetail from "./pages/ArrayDetail"
+import GraphDetail from "./pages/GraphDetail"
 import MergeSort from "./pages/ArrayAlgorithms/MergeSort"
 import QuickSort from "./pages/ArrayAlgorithms/QuickSort"
 import BinarySearch from "./pages/ArrayAlgorithms/BinarySearch"
@@ -44,7 +47,15 @@ function App() {
           }
         />
         <Route
-          path="/array/:id"
+          path="/arrays"
+          element={
+            <ProtectedRoute>
+              <ArrayAlgorithmsHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/arrays/:id"
           element={
             <ProtectedRoute>
               <ArrayDetail />
@@ -52,7 +63,7 @@ function App() {
           }
         />
         <Route
-          path="/array/:id/mergesort"
+          path="/arrays/:id/mergesort"
           element={
             <ProtectedRoute>
               <MergeSort />
@@ -60,7 +71,7 @@ function App() {
           }
         />
         <Route
-          path="/array/:id/quicksort"
+          path="/arrays/:id/quicksort"
           element={
             <ProtectedRoute>
               <QuickSort />
@@ -68,7 +79,7 @@ function App() {
           }
         />
         <Route
-        path="/array/:id/binarysearch"
+        path="/arrays/:id/binarysearch"
         element={
           <ProtectedRoute>
             <BinarySearch />
@@ -76,7 +87,7 @@ function App() {
         }
         />
         <Route
-        path="/array/:id/countinginversions"
+        path="/arrays/:id/countinginversions"
         element={
           <ProtectedRoute>
             <CountingInversions />
@@ -84,12 +95,28 @@ function App() {
         }
         />
         <Route
-        path="/array/:id/quickselect"
+        path="/arrays/:id/quickselect"
         element={
           <ProtectedRoute>
             <QuickSelect />
           </ProtectedRoute>
         }
+        />
+        <Route
+          path="/graphs"
+          element={
+            <ProtectedRoute>
+              <GraphAlgorithmsHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/graphs/:id"
+          element={
+            <ProtectedRoute>
+              <GraphDetail />
+            </ProtectedRoute>
+          }
         />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />

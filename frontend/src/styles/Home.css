@@ -1,97 +1,50 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 40px;
-}
-
 .container {
-  display: flex;
-  width: calc(100% - 80px);
-  margin: 0 auto;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .left-section, .right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+  }
 
-/* Left section */
-.left {
-  width: 40%; /* Adjusted width to accommodate spacing */
-  padding-right: 20px; /* Adding right padding */
-  box-sizing: border-box;
-}
+  .array-button, .graph-button {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    text-decoration: none;
+  }
+  
+  array-button {
+    padding: 45px 90px;
+    border: 2px solid #031e62;
+    background-color: #031e62;
+    color: white;
+    cursor: pointer;
+    border-radius: 24px;
+    font-size: 32px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  graph-button {
+    padding: 45px 90px;
+    border: 2px solid #8d0b0b;
+    background-color: #8d0b0b;
+    color: white;
+    cursor: pointer;
+    border-radius: 24px;
+    font-size: 32px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  array-button:hover {
+    background-color: #031a54;
+    border-color: #031a54;
+  }
 
-/* Right section */
-.right {
-  width: 60%; /* Adjusted width to accommodate spacing */
-  padding-left: 20px; /* Adding left padding */
-  box-sizing: border-box;
-}
-
-/* Styles for the arrays section */
-.arrays-section {
-  margin-bottom: 2rem;
-  margin-top: 20px; /* Adding a top margin */
-  margin-left: 10px; /* Adding a left margin */
-  margin-right: 10px; /* Adding a right margin */
-}
-
-.arrays-section h2 {
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 15px; /* Example margin for the h2 element */
-}
-
-/* Styles for individual arrays */
-.array-container {
-  background-color: #f9f9f9;
-  border-left: 5px solid #031e62;
-  margin: 10px 0;
-  padding: 10px 15px;
-  border-radius: 5px;
-  margin-left: 5px; /* Example left margin for individual arrays */
-  margin-right: 5px; /* Example right margin for individual arrays */
-}
-
-/* Styles for the form section */
-form {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: left;
-  margin-top: 20px
-}
-
-form h2 {
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-form label {
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-form input,
-form textarea {
-  width: 100%;
-  padding: 8px;
-  margin: 8px 0 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-form input[type="submit"] {
-  background-color: #031e62;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-form input[type="submit"]:hover {
-  background-color: #02174c;
-}
+  graph-button:hover {
+    background-color: #7a0909;
+    border-color: #7a0909;
+  }

@@ -4,11 +4,16 @@
   box-sizing: border-box;
 }
 
-.left-section, .right-section {
+.left-section {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 0 10px; /* Optional spacing between sections */
+  margin: 0 10px;
+}
+.right-section {
+  flex: 1;
+  padding: 0 10px;
+  border-left: 1px solid #ccc;
 }
 
 .algorithm-container {
