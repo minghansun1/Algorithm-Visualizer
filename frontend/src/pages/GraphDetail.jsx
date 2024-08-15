@@ -24,7 +24,7 @@ function GraphDetail(){
             setEdges(data.edges);
           })
           .catch((error) => console.error("Error fetching data:", error));
-      };
+    };
 
     useEffect(() => {
         if (graph) {
@@ -69,7 +69,19 @@ function GraphDetail(){
             </div>
             <div className="right-section">
                 <div className="algorithm-container">
-                <p>filler</p>
+                    <p className="algorithm-name">
+                        <Link to={`/graphs/${graph.id}/bfs`} state={{ graph }}>BFS</Link>
+                    </p>
+                </div>
+                <div className="algorithm-container">
+                    <p className="algorithm-name">
+                        <Link to={`/graphs/${graph.id}/dfs`} state={{ graph }}>DFS</Link>
+                    </p>
+                </div>
+                <div className="algorithm-container">
+                    <p className="algorithm-name">
+                        <Link to={`/graphs/${graph.id}/topologicalsort`} state={{ graph }}>Topological Sort</Link>
+                    </p>
                 </div>
             </div>
         </div>

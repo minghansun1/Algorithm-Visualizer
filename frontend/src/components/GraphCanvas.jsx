@@ -3,19 +3,23 @@ import { useLocation, useParams, Link } from "react-router-dom";
 import api from "../api";
 import PublicNavBar from "../components/PublicNavBar"
 import "../styles/Graph.css";
+import "../styles/GraphCanvas.css"
 import "../styles/GraphDetail.css"
 
-function GraphCanvas({graph}){
+function GraphCanvas({graph, grayVertices, blackVertices}) {
   const [vertices, setVertices] = useState([]);
   const [edges, setEdges] = useState([]);
   const [mode, setMode] = useState('add_vertex'); // Modes: 'add_vertex', 'delete_vertex', 'update_vertex', 'add_edge', 'delete_edge', 'update_edge'
   const [currentPosition, setCurrentPosition] = useState(null);
   const [currentValue, setCurrentValue] = useState('');
   const [currentVertex, setCurrentVertex] = useState(null);
+  const [currentEdge, setCurrentEdge] = useState(null);
   const [draggingVertex, setDraggingVertex] = useState(null);
+  const [draggingEdge, setDraggingEdge] = useState(null);
   const [selectedVertices, setSelectedVertices] = useState([]);
   const canvasRef = useRef(null);
   const formRef = useRef(null);
+  const selectedVerticesRef = useRef([]);
 
 
   useEffect(() => {
@@ -27,6 +31,13 @@ function GraphCanvas({graph}){
     drawVertices();
     drawEdges();
   }, [vertices, edges]);
+
+  useEffect(() => {
+    console.log("canvasgrayVertices", grayVertices);
+    console.log("canvasblackVertices", blackVertices);
+    drawVertices();
+    drawEdges();
+  }, [grayVertices, blackVertices]);
 
 
 
@@ -49,7 +60,14 @@ function GraphCanvas({graph}){
           //console.log('Starting drag');
         }
       });
-    };
+    }else if (mode === 'add_edge') {
+    vertices.forEach((vertex, index) => {
+      const distance = Math.sqrt((vertex.x - x) ** 2 + (vertex.y - y) ** 2);
+      if (distance <= 20) {
+        setSelectedVertices(selectedVertices => [...selectedVertices, { vertex: vertex }]);
+        setDraggingEdge({ source: vertex.id, startX: vertex.x, startY: vertex.y });
+      }
+    })};
   };
 
 
@@ -60,18 +78,30 @@ function GraphCanvas({graph}){
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
-
+  
         const x = (event.clientX - rect.left) * scaleX;
         const y = (event.clientY - rect.top) * scaleY;
-
+  
         setVertices((prevVertices) =>
           prevVertices.map((vertex, index) =>
             index === draggingVertex ? { ...vertex, x, y } : vertex
           )
         );
       }
+  
+      if (draggingEdge !== null) {
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+  
+        const x = (event.clientX - rect.left) * scaleX;
+        const y = (event.clientY - rect.top) * scaleY;
+  
+        drawTemporaryEdge(x, y);
+      }
     };
-
+  
     const handleMouseUp = (event) => {
       if (draggingVertex !== null) {
         const canvas = canvasRef.current;
@@ -81,21 +111,55 @@ function GraphCanvas({graph}){
         
         const x = (event.clientX - rect.left) * scaleX;
         const y = (event.clientY - rect.top) * scaleY;
-
+  
         //console.log('Stopping drag, setting draggingVertex to null');
         //console.log(vertices[draggingVertex]);
         updateVertex(vertices[draggingVertex].id, vertices[draggingVertex].value, x, y);
         setDraggingVertex(null);
       }
+  
+      if (draggingEdge !== null) {
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+  
+        const x = (event.clientX - rect.left) * scaleX;
+        const y = (event.clientY - rect.top) * scaleY;
+  
+        let endVertex = null;
+        vertices.forEach((vertex) => {
+          const distance = Math.sqrt((vertex.x - x) ** 2 + (vertex.y - y) ** 2);
+          if (distance <= 20) {
+            endVertex = vertex;
+          }
+        });
+  
+        if (endVertex && draggingEdge.source !== endVertex) {
+          setSelectedVertices(prevSelectedVertices => {
+            const newVertices = [...prevSelectedVertices, { vertex: endVertex }];
+            selectedVerticesRef.current = newVertices;
+            //console.log("selected vertices", newVertices);
+            return newVertices;
+          });
+          setCurrentPosition({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+        } else {
+          // Reset selectedVertices if no valid end vertex is found
+          setSelectedVertices([]);
+          selectedVerticesRef.current = [];
+        }
+        setDraggingEdge(null);
+      }
     };
-
+  
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [draggingVertex]);
+  }, [draggingVertex, draggingEdge, vertices, edges]);
+  
 
   
   useEffect(() => {
@@ -167,20 +231,44 @@ function GraphCanvas({graph}){
         } else {
           setSelectedVertices([closestVertex]);
         }
+      } else {
+        setSelectedVertices([]);
+        selectedVerticesRef.current = [];
       }
     } else if (mode === 'delete_edge') {
-    edges.forEach(edge => {
-      const vertex1 = vertices.find(vertex => vertex.id === edge.source);
-      const vertex2 = vertices.find(vertex => vertex.id === edge.destination);
+      edges.forEach(edge => {
+        const vertex1 = vertices.find(vertex => vertex.id === edge.source);
+        const vertex2 = vertices.find(vertex => vertex.id === edge.destination);
 
-      if (vertex1 && vertex2) {
-        const threshold = 6;
-        if (isPointNearLine(x, y, vertex1.x, vertex1.y, vertex2.x, vertex2.y, threshold)) {
-          deleteEdge(edge.id);
+        if (vertex1 && vertex2) {
+          const threshold = 6;
+          if (isPointNearLine(x, y, vertex1.x, vertex1.y, vertex2.x, vertex2.y, threshold)) {
+            deleteEdge(edge.id);
+          }
         }
+      });
+    } else if (mode === 'update_edge') {
+      let edgeFound = false;
+      edges.forEach((edge) => {
+        const vertex1 = vertices.find(vertex => vertex.id === edge.source);
+        const vertex2 = vertices.find(vertex => vertex.id === edge.destination);
+  
+        if (vertex1 && vertex2) {
+          const threshold = 6;
+          if (isPointNearLine(x, y, vertex1.x, vertex1.y, vertex2.x, vertex2.y, threshold) && !edgeFound) {
+            setCurrentEdge(edge);
+            setCurrentPosition({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+            setCurrentValue(edge.weight);
+            edgeFound = true;
+          }
+        }
+      });
+      if (!edgeFound) {
+        setCurrentEdge(null);
+        setCurrentPosition(null);
+        setCurrentValue('');
       }
-    });
-  }
+    }
   };
   
   
@@ -289,15 +377,27 @@ function GraphCanvas({graph}){
       .delete(`/api/graphs/${graph.id}/edges/delete/${edgeId}/`)
       .then((res) => {
         if (res.status === 204) {
-          console.log("Deleted edge", edgeId);
-          console.log("edges:", edges);
           setEdges((prevEdges) => prevEdges.filter((edge) => edge.id !== edgeId));
-          console.log("edges:", edges);
+          //console.log("edges:", edges);
         } else {
           alert("Failed to delete edge.");
         }
       })
       .catch((err) => alert(err));
+  };
+
+
+  const updateEdge = (edgeId, newValue, source, destination) => {
+    api
+      .put(`/api/graphs/${graph.id}/edges/update/${edgeId}/`, { weight: newValue, source: source, destination: destination})
+      .then((res) => {
+        if (res.status === 200) {
+          setEdges(edges.map((edge) => (edge.id === edgeId ? res.data : edge)));
+        } else {
+          alert("Failed to update edge.");
+        }
+      })
+      .catch((err) => alert("Error updating edge: " + err));
   };
 
 
@@ -307,6 +407,11 @@ function GraphCanvas({graph}){
 
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const vertexMap = new Map();
+    for (const vertex of graph.vertices) {
+      vertexMap.set(vertex.id, vertex);
+    }
 
     vertices.forEach((vertex) => {
       ctx.beginPath();
@@ -324,6 +429,77 @@ function GraphCanvas({graph}){
       ctx.textBaseline = 'middle';
       ctx.fillText(vertex.value, vertex.x, vertex.y);
     });
+    if (blackVertices === undefined || grayVertices === undefined) {
+      return;
+    }
+    blackVertices.forEach((vertexId) => {
+      let vertex = vertexMap.get(vertexId);
+      ctx.beginPath();
+      ctx.arc(vertex.x, vertex.y, 20, 0, 2 * Math.PI); // 20 is the radius
+      ctx.fillStyle = 'black';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'black';
+      ctx.stroke();
+      ctx.closePath();
+
+      ctx.font = '16px Arial';
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(vertex.value, vertex.x, vertex.y);
+    }
+    );
+    grayVertices.forEach((vertexId) => {
+      let vertex = vertexMap.get(vertexId);
+      ctx.beginPath();
+      ctx.arc(vertex.x, vertex.y, 20, 0, 2 * Math.PI); // 20 is the radius
+      ctx.fillStyle = 'gray';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'black';
+      ctx.stroke();
+      ctx.closePath();
+
+      ctx.font = '16px Arial';
+      ctx.fillStyle = 'black';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(vertex.value, vertex.x, vertex.y);
+    }
+    );
+  };
+
+
+  const drawTemporaryEdge = (x, y) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawVertices();
+    drawEdges();
+  
+    if (draggingEdge) {
+      // Calculate the direction from the start vertex to the current mouse position
+      const dx = x - draggingEdge.startX;
+      const dy = y - draggingEdge.startY;
+      const length = Math.sqrt(dx * dx + dy * dy);
+  
+      // Normalize the direction vector
+      const unitDx = dx / length;
+      const unitDy = dy / length;
+  
+      // Calculate the starting point 20 pixels from the center of the start vertex
+      const startX = draggingEdge.startX + unitDx * 20;
+      const startY = draggingEdge.startY + unitDy * 20;
+  
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
   };
 
 
@@ -420,41 +596,50 @@ function GraphCanvas({graph}){
 
 
   const handleValueSubmit = () => {
-    const { x, y } = currentPosition;
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    if (currentValue === '' || isNaN(parseInt(currentValue))) {
-      return;
+  const { x, y } = currentPosition;
+  const canvas = canvasRef.current;
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  if (currentValue === '' || isNaN(parseInt(currentValue))) {
+    return;
+  }
+  if (mode === 'add_vertex' && currentPosition) {
+    addVertex(currentValue, x * scaleX, y * scaleY);
+    setCurrentPosition(null);
+    setCurrentValue('');
+    setDraggingVertex(null);
+  } else if (mode === 'update_vertex' && currentPosition) {
+    updateVertex(vertices[currentVertex].id, currentValue, x * scaleX, y * scaleY);
+    setCurrentVertex(null);
+    setCurrentPosition(null);
+    setCurrentValue('');
+    setDraggingVertex(null);
+  } else if (mode === 'add_edge' && currentPosition) {
+    if (selectedVerticesRef.current.length === 2) {
+      addEdge(currentValue, selectedVerticesRef.current[0].vertex, selectedVerticesRef.current[1].vertex);
+      setSelectedVertices([]);
+      selectedVerticesRef.current = [];
     }
-    if (mode === 'add_vertex' && currentPosition) {
-      addVertex(currentValue, x * scaleX, y * scaleY);
-      setCurrentPosition(null);
-      setCurrentValue('');
-      setDraggingVertex(null);
-    } else if (mode === 'update_vertex' && currentPosition) {
-      updateVertex(vertices[currentVertex].id, currentValue, x * scaleX, y * scaleY);
-      setCurrentVertex(null);
-      setCurrentPosition(null);
-      setCurrentValue('');
-      setDraggingVertex(null);
-    } else if (mode === 'add_edge' && currentPosition) {
-      addEdge(currentValue, selectedVertices[0].vertex, selectedVertices[1].vertex);
-      setCurrentPosition(null);
-      setCurrentValue('');
-    }
-  };
+    setCurrentPosition(null);
+    setCurrentValue('');
+  } else if (mode === 'update_edge' && currentEdge) {
+    updateEdge(currentEdge.id, currentValue, currentEdge.source, currentEdge.destination);
+    setCurrentEdge(null);
+    setCurrentPosition(null);
+    setCurrentValue('');
+  }
+};
 
   return (
     <div>
-      <div>
-        <button onClick={() => setMode('add_vertex')}>Add Vertex</button>
-        <button onClick={() => setMode('delete_vertex')}>Delete Vertex</button>
-        <button onClick={() => setMode('update_vertex')}>Update Vertex</button>
-        <button onClick={() => setMode('add_edge')}>Add Edge</button>
-        <button onClick={() => setMode('delete_edge')}>Delete Edge</button>
-        <button onClick={() => setMode('update_edge')}>Update Edge</button>
+      <div className="button-container">
+        <button className="button" onClick={() => setMode('add_vertex')}>Add Vertex</button>
+        <button className="button" onClick={() => setMode('delete_vertex')}>Delete Vertex</button>
+        <button className="button" onClick={() => setMode('update_vertex')}>Update Vertex</button>
+        <button className="button" onClick={() => setMode('add_edge')}>Add Edge</button>
+        <button className="button" onClick={() => setMode('delete_edge')}>Delete Edge</button>
+        <button className="button" onClick={() => setMode('update_edge')}>Update Edge</button>
       </div>
       <div style={{ position: 'relative' }}>
         <canvas
@@ -475,6 +660,18 @@ function GraphCanvas({graph}){
             padding: '10px',
             zIndex: 1000
           }}>
+            <button
+              className="button-cancel"
+              type="button"
+              onClick={() => {
+                setCurrentPosition(null);
+                setCurrentValue('');
+                setCurrentVertex(null);
+                setCurrentEdge(null);
+              }}
+            >
+              &times;
+            </button>
             <p>{currentPosition.x}, {currentPosition.y}</p>
             <input
               type="text"
@@ -485,12 +682,9 @@ function GraphCanvas({graph}){
               pattern="\d+"
               title="Please enter a valid integer value."
             />
-            <button type="button" onClick={handleValueSubmit}>Submit</button>
-            <button type="button" onClick={() => {
-              setCurrentPosition(null);
-              setCurrentValue('');
-              setCurrentVertex(null);
-            }}>Cancel</button>
+            <div className='button-container'>
+              <button className="submit-button" onClick={handleValueSubmit}>Submit</button>
+            </div>
           </form>
         )}
       </div>

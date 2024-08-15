@@ -16,6 +16,9 @@ import QuickSort from "./pages/ArrayAlgorithms/QuickSort"
 import BinarySearch from "./pages/ArrayAlgorithms/BinarySearch"
 import CountingInversions from "./pages/ArrayAlgorithms/CountingInversions"
 import QuickSelect from "./pages/ArrayAlgorithms/QuickSelect"
+import BFS from "./pages/GraphAlgorithms/BFS"
+import DFS from "./pages/GraphAlgorithms/DFS"
+import TopologicalSort from "./pages/GraphAlgorithms/TopologicalSort"
 import MergeSortInfo from "./pages/Info/MergeSortInfo"
 import QuickSortInfo from "./pages/Info/QuickSortInfo"
 import BinarySearchInfo from "./pages/Info/BinarySearchInfo"
@@ -117,6 +120,30 @@ function App() {
               <GraphDetail />
             </ProtectedRoute>
           }
+        />
+        <Route
+        path="/graphs/:id/bfs"
+        element={
+          <ProtectedRoute>
+            <BFS />
+          </ProtectedRoute>
+        }
+        />
+        <Route
+        path="/graphs/:id/dfs"
+        element={
+          <ProtectedRoute>
+            <DFS />
+          </ProtectedRoute>
+        }
+        />
+        <Route
+        path="/graphs/:id/topologicalsort"
+        element={
+          <ProtectedRoute>
+            <TopologicalSort />
+          </ProtectedRoute>
+        }
         />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
