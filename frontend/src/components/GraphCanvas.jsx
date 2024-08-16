@@ -6,7 +6,7 @@ import "../styles/Graph.css";
 import "../styles/GraphCanvas.css"
 import "../styles/GraphDetail.css"
 
-function GraphCanvas({graph, grayVertices, blackVertices}) {
+function GraphCanvas({graph, grayVertices, blackVertices, onGraphUpdate}) {
   const [vertices, setVertices] = useState([]);
   const [edges, setEdges] = useState([]);
   const [mode, setMode] = useState('add_vertex'); // Modes: 'add_vertex', 'delete_vertex', 'update_vertex', 'add_edge', 'delete_edge', 'update_edge'
@@ -296,7 +296,9 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
         .post(`/api/graphs/${graph.id}/vertices/`, {value: currentValue, x: Math.round(x), y: Math.round(y)})
         .then((res) => {
             if (res.status == 201){
-              setVertices([...vertices, res.data]);
+              const newVertices = [...vertices, res.data];
+              setVertices(newVertices);
+              onGraphUpdate();
             } else {
               alert("Failed to add vertex.");
             }
@@ -326,6 +328,7 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
             if (res.status === 204) {
               setEdges(prevEdges => prevEdges.filter(edge => edge.source !== vertexId && edge.destination !== vertexId));
               setVertices(prevVertices => prevVertices.filter(vertex => vertex.id !== vertexId));
+              onGraphUpdate();
             } else {
               alert("Failed to delete vertex.");
             }
@@ -348,6 +351,7 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
                   return vertex;
                 }
               }));
+              onGraphUpdate();
             } else {
               alert("Failed to update vertex.");
             }
@@ -363,6 +367,7 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
       .then((res) => {
         if (res.status === 201) {
           setEdges([...edges, res.data]);
+          onGraphUpdate();
           //console.log("edges:", edges);
         } else {
           alert("Failed to add edge.");
@@ -378,6 +383,7 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
       .then((res) => {
         if (res.status === 204) {
           setEdges((prevEdges) => prevEdges.filter((edge) => edge.id !== edgeId));
+          onGraphUpdate();
           //console.log("edges:", edges);
         } else {
           alert("Failed to delete edge.");
@@ -393,6 +399,7 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
       .then((res) => {
         if (res.status === 200) {
           setEdges(edges.map((edge) => (edge.id === edgeId ? res.data : edge)));
+          onGraphUpdate();
         } else {
           alert("Failed to update edge.");
         }
@@ -595,41 +602,42 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
   };
 
 
-  const handleValueSubmit = () => {
-  const { x, y } = currentPosition;
-  const canvas = canvasRef.current;
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  if (currentValue === '' || isNaN(parseInt(currentValue))) {
-    return;
-  }
-  if (mode === 'add_vertex' && currentPosition) {
-    addVertex(currentValue, x * scaleX, y * scaleY);
-    setCurrentPosition(null);
-    setCurrentValue('');
-    setDraggingVertex(null);
-  } else if (mode === 'update_vertex' && currentPosition) {
-    updateVertex(vertices[currentVertex].id, currentValue, x * scaleX, y * scaleY);
-    setCurrentVertex(null);
-    setCurrentPosition(null);
-    setCurrentValue('');
-    setDraggingVertex(null);
-  } else if (mode === 'add_edge' && currentPosition) {
-    if (selectedVerticesRef.current.length === 2) {
-      addEdge(currentValue, selectedVerticesRef.current[0].vertex, selectedVerticesRef.current[1].vertex);
-      setSelectedVertices([]);
-      selectedVerticesRef.current = [];
+  const handleValueSubmit = (event) => {
+    event.preventDefault();
+    const { x, y } = currentPosition;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if (currentValue === '' || isNaN(parseInt(currentValue))) {
+      return;
     }
-    setCurrentPosition(null);
-    setCurrentValue('');
-  } else if (mode === 'update_edge' && currentEdge) {
-    updateEdge(currentEdge.id, currentValue, currentEdge.source, currentEdge.destination);
-    setCurrentEdge(null);
-    setCurrentPosition(null);
-    setCurrentValue('');
-  }
-};
+    if (mode === 'add_vertex' && currentPosition) {
+      addVertex(currentValue, x * scaleX, y * scaleY);
+      setCurrentPosition(null);
+      setCurrentValue('');
+      setDraggingVertex(null);
+    } else if (mode === 'update_vertex' && currentPosition) {
+      updateVertex(vertices[currentVertex].id, currentValue, x * scaleX, y * scaleY);
+      setCurrentVertex(null);
+      setCurrentPosition(null);
+      setCurrentValue('');
+      setDraggingVertex(null);
+    } else if (mode === 'add_edge' && currentPosition) {
+      if (selectedVerticesRef.current.length === 2) {
+        addEdge(currentValue, selectedVerticesRef.current[0].vertex, selectedVerticesRef.current[1].vertex);
+        setSelectedVertices([]);
+        selectedVerticesRef.current = [];
+      }
+      setCurrentPosition(null);
+      setCurrentValue('');
+    } else if (mode === 'update_edge' && currentEdge) {
+      updateEdge(currentEdge.id, currentValue, currentEdge.source, currentEdge.destination);
+      setCurrentEdge(null);
+      setCurrentPosition(null);
+      setCurrentValue('');
+    }
+  };
 
   return (
     <div>
@@ -659,7 +667,10 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
             border: '1px solid black',
             padding: '10px',
             zIndex: 1000
-          }}>
+          }}
+          onSubmit={handleValueSubmit}
+          >
+            
             <button
               className="button-cancel"
               type="button"
@@ -682,8 +693,8 @@ function GraphCanvas({graph, grayVertices, blackVertices}) {
               pattern="\d+"
               title="Please enter a valid integer value."
             />
-            <div className='button-container'>
-              <button className="submit-button" onClick={handleValueSubmit}>Submit</button>
+            <div className="button-container">
+              <button className="submit-button" type="submit">Submit</button>
             </div>
           </form>
         )}

@@ -19,9 +19,9 @@ function privateBFS(graph, startVertex) {
     grayVertices.push([startVertex.id]);
     blackVertices.push([]);
     queue.push(startVertex.id);
-    console.log("graph", graph);
-    console.log("startVertex", startVertex);
-    console.log("queue", queue);
+    //console.log("graph", graph);
+    //console.log("startVertex", startVertex);
+    //console.log("queue", queue);
     queueStates.push([...queue]);
     let visited = new Set();
     visited.add(startVertex);
@@ -47,9 +47,9 @@ function privateBFS(graph, startVertex) {
       blackVertices.push(Array.from(currentBlack));
       queueStates.push([...queue]);
     }
-    console.log("grayVertices", grayVertices);
-    console.log("blackVertices", blackVertices);
-    console.log("queueStates", queueStates);
+    //console.log("grayVertices", grayVertices);
+    //console.log("blackVertices", blackVertices);
+    //console.log("queueStates", queueStates);
     return {
       grayVertices: grayVertices,
       blackVertices: blackVertices,
@@ -59,21 +59,44 @@ function privateBFS(graph, startVertex) {
 
 function BFS(){
     const location = useLocation();
-    const { graph } = location.state || { array: null };
+    const [graph, setGraph] = useState(location.state?.graph || null);
     const [grayVertices, setGrayVertices] = useState([]);
     const [blackVertices, setBlackVertices] = useState([]);
     const [queueStates, setQueueStates] = useState([]);
     const [currentRow, setCurrentRow] = useState(0);
+    const vertexMap = new Map();
+    for (const vertex of graph?.vertices || []) {
+      vertexMap.set(vertex.id, vertex);
+    }
 
 
-    useEffect(() => {
-      if (graph) {
-        const {grayVertices, blackVertices, queueStates} = privateBFS(graph, graph.vertices[2]);
-        setGrayVertices(grayVertices);
-        setBlackVertices(blackVertices);
-        setQueueStates(queueStates);
-      }
-  }, [])
+  useEffect(() => {
+    getGraph(graph.id);
+  }, []);
+
+  useEffect(() => {
+    if (graph) {
+      console.log("graph", graph);
+      const {grayVertices, blackVertices, queueStates} = privateBFS(graph, graph.vertices[3]);
+      setGrayVertices(grayVertices);
+      setBlackVertices(blackVertices);
+      setQueueStates(queueStates);
+      console.log("queueStates", queueStates);
+    }
+  }, [graph])
+
+  const handleGraphUpdate = () => {
+    getGraph(graph.id);
+    console.log("graph", graph);
+  };
+
+  const getGraph = (id) => {
+    api.get(`/api/graphs/${id}/`)
+      .then((res) => {
+        setGraph(res.data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
 
     return (
         <div>
@@ -102,7 +125,23 @@ function BFS(){
                     graph={graph}
                     grayVertices={grayVertices[currentRow]}
                     blackVertices={blackVertices[currentRow]}
+                    onGraphUpdate={handleGraphUpdate}
                     ></GraphCanvas>
+                </div>
+                <div>
+                    {queueStates[currentRow] && queueStates[currentRow].length>0 && (
+                        <table>
+                            <tbody>
+                                <tr>
+                                    {queueStates[currentRow].map((cell, cellIndex) => (
+                                        <td key={cellIndex}>
+                                            {vertexMap.get(cell).value}
+                                        </td>
+                                    ))}
+                                </tr>
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
           </div>
